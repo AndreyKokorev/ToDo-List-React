@@ -9,7 +9,6 @@ import '../../index.css';
 export default class App extends Component {
 
   idMax = 1;
-  idData = new Set([1, 2, 3]);
 
   state = {
     todoData: [
@@ -36,8 +35,6 @@ export default class App extends Component {
         ...todoData.slice(idx + 1)
       ]
 
-      this.idData.delete(id)
-
       return {
         todoData: newArray
       }
@@ -55,16 +52,33 @@ export default class App extends Component {
   }
 
   onToggleImportant = (id) => {
-    this.state(({ todoData }) => {
-      const newObj = todoData
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex((el) => el.id === id);
+      const oldItem = todoData[idx];
+      const newItem = {...oldItem, important: !oldItem.important};
+
       return {
-        toDoData: '2'
+        todoData: [ 
+          ...todoData.slice(0, idx),
+          newItem,
+          ...todoData.slice(idx + 1)]
       }
     })   
   }
 
   onToggleDone = (id) => {
-    console.log('Toggle done', id)
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex((el) => el.id === id);
+      const oldItem = todoData[idx];
+      const newItem = {...oldItem, done: !oldItem.done};
+
+      return {
+        todoData: [ 
+          ...todoData.slice(0, idx),
+          newItem,
+          ...todoData.slice(idx + 1)]
+      }
+    })   
   }
 
   render() {
