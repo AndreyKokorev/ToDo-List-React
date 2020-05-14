@@ -18,7 +18,8 @@ export default class App extends Component {
     ]
   };
 
-  createTodoItem(label) { //Не работает стрелочная функция
+  createTodoItem(label) { 
+    console.log(this)//Не работает стрелочная функция
     return {
       label,
       important: false,
@@ -27,7 +28,8 @@ export default class App extends Component {
     }
   }
 
-  deleteItem = (id) => { // стрелочной функции нет в прототипе класса
+  deleteItem = (id) => { 
+    console.log(this)// стрелочной функции нет в прототипе класса
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((el) => el.id === id);
       const newArray = [
@@ -51,47 +53,49 @@ export default class App extends Component {
     })
   }
 
+  toggleProperty = (arr, id, propName) => {
+    const idx = arr.findIndex((el) => el.id === id);
+    const oldItem = arr[idx];
+    const newItem = {...oldItem, [propName]: !oldItem[propName]};
+
+    return {
+      todoData: [ 
+        ...arr.slice(0, idx),
+        newItem,
+        ...arr.slice(idx + 1)]
+    }
+  }
+
   onToggleImportant = (id) => {
     this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id);
-      const oldItem = todoData[idx];
-      const newItem = {...oldItem, important: !oldItem.important};
 
-      return {
-        todoData: [ 
-          ...todoData.slice(0, idx),
-          newItem,
-          ...todoData.slice(idx + 1)]
-      }
+      return this.toggleProperty(todoData, id, 'important')
     })   
   }
 
   onToggleDone = (id) => {
     this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id);
-      const oldItem = todoData[idx];
-      const newItem = {...oldItem, done: !oldItem.done};
-
-      return {
-        todoData: [ 
-          ...todoData.slice(0, idx),
-          newItem,
-          ...todoData.slice(idx + 1)]
-      }
+    
+      return this.toggleProperty(todoData, id, 'done')
     })   
   }
 
   render() {
+    
+    const { todoData } = this.state;
+    const doneCount = todoData.filter((el) => el.done === true).length;
+    const todoCount = todoData.length - doneCount;
+
     return (
       <div className="todo-app" >
-        <AppHeader toDo={1} done={3} />
+        <AppHeader toDo={todoCount} done={doneCount} />
         <div className="top-panel d-flex">
           <SearchPanel />
           <ItemStatusFilter />
         </div>
 
         <TodoList
-          todos={this.state.todoData}
+          todos={todoData}
           onDeleted={this.deleteItem}
           onToggleImportant={this.onToggleImportant}
           onToggleDone={this.onToggleDone} />
@@ -102,4 +106,4 @@ export default class App extends Component {
 }
 
 
-console.log(App)
+console.log(Component)
