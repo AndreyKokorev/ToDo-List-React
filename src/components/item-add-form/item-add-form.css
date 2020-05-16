@@ -1,0 +1,10 @@
+.item-add-form{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3px;
+  margin-top: 10px;
+}
+
+.btn {
+ width: 92px;
+}
